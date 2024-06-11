@@ -5,5 +5,7 @@ df = pd.read_csv(os.path.join(os.path.dirname(
 
 
 def search(word):
-    d = df[df['word'] == word].iloc[0]
-    return d.to_dict()
+    d = df[df['word'] == word]
+    if len(d) > 0:
+        return d.iloc[0].to_dict()
+    return None
