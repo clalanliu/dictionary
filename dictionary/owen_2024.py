@@ -10,11 +10,12 @@ def get_definitions_and_pronunciations(word):
 
     # SQL query to get definitions and samples
     query_definitions = """
-    SELECT w.word, s.synsetid, s.definition, sa.sample
+    SELECT w.word, s.synsetid, s.definition, sa.sample, d.domainname
     FROM words w
     LEFT JOIN senses se ON w.wordid = se.wordid
     LEFT JOIN synsets s ON se.synsetid = s.synsetid
     LEFT JOIN samples sa ON s.synsetid = sa.synsetid
+    LEFT JOIN domains d ON s.domainid = d.domainid
     WHERE w.word = ?
     ORDER BY s.definition
     """
@@ -48,7 +49,8 @@ def get_definitions_and_pronunciations(word):
         if sample and word in sample:
             result['definitions'].append({
                 'definition': row[2],
-                'sample': row[3] if row[3] else None
+                'sample': row[3] if row[3] else None,
+                'pos': row[4]
             })
 
     for row in pronunciations:
