@@ -1,5 +1,7 @@
+import os
 import sqlite3
-conn = sqlite3.connect('data\oewn-2024-sqlite-2.1.1.sqlite')
+conn = sqlite3.connect(os.path.join(os.path.dirname(
+    __file__), '..', 'data', 'oewn-2024-sqlite-2.1.1.sqlite'))
 
 
 def get_definitions_and_pronunciations(word):
