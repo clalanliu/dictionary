@@ -1,7 +1,7 @@
 import os
 import sqlite3
 conn = sqlite3.connect(os.path.join(os.path.dirname(
-    __file__), '..', 'data', 'oewn-2024-sqlite-2.1.1.sqlite'))
+    __file__), '..', 'data', 'oewn-2024-sqlite-2.1.1.sqlite'), check_same_thread=False)
 
 
 def get_definitions_and_pronunciations(word):
@@ -36,9 +36,6 @@ def get_definitions_and_pronunciations(word):
     cursor.execute(query_pronunciations, (word,))
     pronunciations = cursor.fetchall()
 
-    # Close the connection
-    conn.close()
-
     # Organize the results
     result = {
         'word': word,
@@ -47,10 +44,12 @@ def get_definitions_and_pronunciations(word):
     }
 
     for row in definitions:
-        result['definitions'].append({
-            'definition': row[2],
-            'sample': row[3] if row[3] else None
-        })
+        sample = row[3]
+        if sample and word in sample:
+            result['definitions'].append({
+                'definition': row[2],
+                'sample': row[3] if row[3] else None
+            })
 
     for row in pronunciations:
         result['pronunciations'].append(row[1])
